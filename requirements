@@ -1,0 +1,6 @@
+To ensure that you're not working in the login node and 
+having the libraries be activated do the following:
+
+> linuxsh
+> cd Desktop/projects/epilepticseizures
+> source bsc-env/bin/activate
