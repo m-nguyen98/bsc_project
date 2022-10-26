@@ -27,6 +27,7 @@ Channel 21: FT9-FT10
 Channel 22: FT10-T8
 Channel 23: T8-P8
 
+
 File Name: chb01_01.edf
 File Start Time: 11:42:54
 File End Time: 12:42:54
