@@ -62,6 +62,7 @@ def feature_vector(data, times):
     band1_max, band2_max, band3_max, band4_max, band5_max, band6_max = [],[],[],[],[],[] # max 
     band1_min, band2_min, band3_min, band4_min, band5_min, band6_min = [],[],[],[],[],[] # min
     band1_skew, band2_skew, band3_skew, band4_skew, band5_skew, band6_skew = [],[],[],[],[],[] #skewness
+    band1_nstd,band2_nstd,band3_nstd,band4_nstd,band5_nstd,band6_nstd = [],[],[],[],[],[] # normalized standard deviation
 
     # Calculate 6 features of DWT coefficients.
     for i in range(len(cD1)):
@@ -99,6 +100,13 @@ def feature_vector(data, times):
         band4_std.append(np.std(cD4[i, :]))
         band5_std.append(np.std(cD3[i, :]))
         band6_std.append(np.std(cD2[i, :]))
+        
+        band1_nstd.append(np.std(cD7[i, :])/(np.max(cD7[i, :])-min(cD7[i, :])))
+        band2_nstd.append(np.std(cD6[i, :])/(np.max(cD6[i, :])-min(cD6[i, :])))
+        band3_nstd.append(np.std(cD5[i, :])/(np.max(cD5[i, :])-min(cD5[i, :])))
+        band4_nstd.append(np.std(cD4[i, :])/(np.max(cD4[i, :])-min(cD4[i, :])))
+        band5_nstd.append(np.std(cD3[i, :])/(np.max(cD3[i, :])-min(cD3[i, :])))
+        band6_nstd.append(np.std(cD2[i, :])/(np.max(cD2[i, :])-min(cD2[i, :])))
 
         band1_skew.append(skew(cD7[i, :]))
         band2_skew.append(skew(cD6[i, :]))
@@ -141,6 +149,13 @@ def feature_vector(data, times):
     band4_std = np.array(band4_std).reshape(1, -1)
     band5_std = np.array(band5_std).reshape(1, -1)
     band6_std = np.array(band6_std).reshape(1, -1)
+    
+    band1_nstd = np.array(band1_nstd).reshape(1, -1)
+    band2_nstd = np.array(band2_nstd).reshape(1, -1)
+    band3_nstd = np.array(band3_nstd).reshape(1, -1)
+    band4_nstd = np.array(band4_nstd).reshape(1, -1)
+    band5_nstd = np.array(band5_nstd).reshape(1, -1)
+    band6_nstd = np.array(band6_nstd).reshape(1, -1)
 
     band1_skew = np.array(band1_skew).reshape(1, -1)
     band2_skew = np.array(band2_skew).reshape(1, -1)
@@ -149,15 +164,19 @@ def feature_vector(data, times):
     band5_skew = np.array(band5_skew).reshape(1, -1)
     band6_skew = np.array(band6_skew).reshape(1, -1)
 
-    feature_vector = np.concatenate((band1_en, band1_max, band1_min, band1_mean, band1_std, band1_skew,
-                                    band2_en, band2_max, band2_min, band2_mean, band2_std, band2_skew,
-                                    band3_en, band3_max, band3_min, band3_mean, band3_std, band3_skew,
-                                    band4_en, band4_max, band4_min, band4_mean, band4_std, band4_skew,
-                                    band5_en, band5_max, band5_min, band5_mean, band5_std, band5_skew,
-                                    band6_en, band6_max, band6_min, band6_mean, band6_std, band6_skew
-                                        ), axis=0)
+    feature_vector = np.concatenate((band1_en, band1_max, band1_min, band1_mean, band1_std, band1_nstd, band1_skew,
+                                    band2_en, band2_max, band2_min, band2_mean, band2_std, band2_nstd, band2_skew,
+                                    band3_en, band3_max, band3_min, band3_mean, band3_std, band3_nstd, band3_skew,
+                                    band4_en, band4_max, band4_min, band4_mean, band4_std, band4_nstd, band4_skew,
+                                    band5_en, band5_max, band5_min, band5_mean, band5_std, band5_nstd, band5_skew,
+                                    band6_en, band6_max, band6_min, band6_mean, band6_std, band6_nstd, band6_skew), axis=0)
     n, m = np.shape(feature_vector)
     feature_vector = feature_vector.reshape(m,n)
 
-    # feature vector if 23 x 36 
+    # feature vector if 23 x 42 
     return feature_vector 
+
+def legend_without_duplicate_labels(ax):
+    handles, labels = ax.get_legend_handles_labels()
+    unique = [(h, l) for i, (h, l) in enumerate(zip(handles, labels)) if l not in labels[:i]]
+    ax.legend(*zip(*unique), bbox_to_anchor=(1.04,1),  loc = "upper left", fontsize=15)
